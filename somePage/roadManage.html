@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="js/jquery.js" />
+		<link href="../three/font-awesome-4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
+		<link href="../three/zTree_v3-master/css/zTreeStyle/zTreeStyle.css" type="text/css" rel="stylesheet" />
+		<style>
+			#roadManage {
+				width: 100%;
+				height: 100%;
+				background: #ccc;
+			}		
+			#roadManage ul li {
+				float: left;
+				margin-left: 10px;
+				width: 120px;
+				height: 40px;
+				font-size: 16px;
+				color: white;
+				background: green;
+				text-align: center;
+				line-height: 40px;
+			}
+			
+			ul {
+				list-style: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="roadManage">
+			<ul>
+				<li><i class="fa fa-plus fa-lg"></i>全部展开</li>
+				<li><i class="fa fa-plus fa-lg"></i>增加区域</li>
+				<li><i class="fa fa-minus fa-lg"></i>删除区域</li>
+				<li><i class="fa fa-plus fa-lg"></i>增加路口</li>
+				<li><i class="fa fa-minus fa-lg"></i>删除路口</li>
+			</ul>
+			<table id="tbRoad" class="table" cellspacing="1" cellpadding="0" width="100%" align="center" border="0" bgcolor="black">
+				<theader bgcolor="black">
+					<tr bgcolor="white">
+						<th class=""><input type="checkbox" id="tbSelectAllRoad" style="visibility: hidden;" /></th>
+						<th>区域编号</th>
+						<th>区域名称</th>
+						<th class="">路口编号</th>
+						<th class="">路口名称</th>
+						<th class="">备注</th>
+						<th class="">编辑</th>
+					</tr>
+				</theader>
+			</table>
+		</div>
+	</body>
+
+</html>
+<script>
+	$(function() {
+		var alertForm = null;
+		var ztree = null;
+		$("table input[type='checkbox']").live("click", function(event) {
+			event.stopPropagation();
+		});
+		//读取路口表XML文件，到网页表格
+		function xmlToRoadTable(obj1) {
+			$(obj1).find("DepartInfo").each(function() {
+				var obj = new Object();
+				obj.DepartId = $(this).find("DepartId").text();
+				obj.DepartName = $(this).find("DepartName").text();
+				obj.DepartSeq = $(this).find("DepartSeq").text();
+				DepartArr.push(obj);
+			});
+			$(obj1).find("UserInfo").each(function() {
+				var obj = new Object();
+				obj.UserId = $(this).find("UserId").text();
+				obj.UserName = $(this).find("UserName").text();
+				obj.DepartId = $(this).find("DepartId").text();
+				UserArr.push(obj);
+			});
+
+			$(obj1).find("AreaInfo").each(function() {
+				var obj = new Object();
+				obj.AreaId = $(this).find("AreaId").text();
+				obj.AreaName = $(this).find("AreaName").text();
+				obj.AreaMemo = $(this).find("AreaMemo").text();
+				var str = '<tr class="areaTr"><td class="tdWidth55"><input type="checkbox" name="b" /></td><td class="tdWidth100">' + obj.AreaId + '</td>';
+				str += '<td class="tdWidth300">' + obj.AreaName + '</td><td class="tdWidth100"><i class="fa fa-chevron-down fa-lg"></i></td><td class="tdWidth300"></td><td class="tdAuto">' + obj.AreaMemo + '</td><td class="tdWidth100"><a>编辑</a></td></tr>';
+				$("#tbRoad").append($(str));
+				AreaArr.push(obj);
+			});
+			$(obj1).find("RoadInfo").each(function() {
+				var obj = new Object();
+				obj.AreaId = $(this).find("AreaId").text();
+				obj.RoadId = $(this).find("RoadId").text();
+				obj.RoadName = $(this).find("RoadName").text();
+				obj.RoadMemo = $(this).find("RoadMemo").text();
+				obj.DepartList = $(this).find("DepartList").text().split(";");
+				obj.UserList = $(this).find("UserList").text().split(";");
+				obj.str = '<tr class="roadTr" pid="' + obj.AreaId + '"><td class="tdWidth55"><input type="checkbox" name="a" /></td ><td class="tdWidth100"></td><td class="tdWidth300"></td>';
+				obj.str += '<td class="tdWidth100">' + obj.RoadId + '</td><td class="tdWidth300">' + obj.RoadName + '</td><td>' + obj.RoadMemo + '</td><td class="tdWidth100"><a>编辑</a></td></tr>';
+				RoadArr.push(obj);
+			});
+			$("#tbRoad .areaTr").each(function() {
+				for(var i = RoadArr.length - 1; i >= 0; i--) {
+					if($($(this).find("td")[1]).text() == RoadArr[i].AreaId) {
+						$(this).after($(RoadArr[i].str));
+					}
+				}
+			});
+		}
+		//XML字符串转XML Dom对象
+		function toXmlDom(source) {
+			var xmlDoc = null;
+			if(window.ActiveXObject) {
+				var ARR_ACTIVEX = ["MSXML4.DOMDocument", "MSXML3.DOMDocument", "MSXML2.DOMDocument", "MSXML.DOMDocument", "Microsoft.XmlDom"];
+				var XmlDomflag = false;
+				for(var i = 0; i < ARR_ACTIVEX.length && !XmlDomflag; i++) {
+					try {
+						var objXML = new ActiveXObject(ARR_ACTIVEX[i]);
+						xmlDoc = objXML;
+						XmlDomflag = true;
+					} catch(e) {}
+				}
+				if(xmlDoc) {
+					xmlDoc.async = false;
+					xmlDoc.loadXML(source);
+				}
+			} else {
+				var parser = new DOMParser();
+				var xmlDoc = parser.parseFromString(source, "text/xml");
+			}
+			return xmlDoc;
+		};
+		//初始化区域下拉框
+		function AreaArrToSelect(selectObj) {
+			for(var i = 0; i < AreaArr.length; i++) {
+				var str = '<option value="' + AreaArr[i].AreaId + '">' + AreaArr[i].AreaName + '</option>';
+				$(str).appendTo(selectObj);
+			}
+		};
+	})
+</script>

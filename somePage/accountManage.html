@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="../js/jquery-1.10.1.min.js"></script>
+		<script src="../js/vue.js"></script>
+		<style type="text/css">
+			td,
+			th {
+				text-align: center;
+				padding: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div>
+			<table id="tb" align="center" bgcolor="#d1d1d1" cellspacing="1" cellpadding="6" style="color:red">
+				<theader bgcolor="white">
+					<tr bgcolor="white">
+						<th>&nbsp;</th>
+						<th>用户编号</th>
+						<th>用户名称</th>
+						<th>所属部门</th>
+						<th>备注</th>
+						<th>功能权限</th>
+						<th>路口权限</th>
+						<th>编辑</th>
+					</tr>
+					
+				</theader>
+			</table>
+		</div>
+		<div class="dd">
+			<input type="text" />
+			<input type="text" />
+			<input type="text" />
+			<input type="text" />
+		</div>
+        <button class="btnSubmit">xsss</button>
+	</body>
+
+</html>
+<script>
+var arrs=[];
+	$(function() {
+		arrs = [{
+			"xuhao": "1",
+			"name": "小明",
+			"depart": "研发部"
+		}, {
+			"xuhao": '2',
+			"name": "小红",
+			"depart": "市场部"
+		}];
+console.log(arrs);
+	for(var index in arrs) {
+            var p=arrs[index];
+			var tr = '<tr bgcolor="white"><td><input type="checkbox" /></td><td>' + p.xuhao + '</td><td>' + p.name + '</td><td>' + p.depart + '</td><td></td><td></td><td></td><td class="editContent">编辑</td></tr>';
+			var table = $("#tb").append(tr);
+	};
+		
+		 //确认添加
+    $(".btnSubmit").on("click", function () {
+    	debugger
+        var $input = $(".dd  input");
+        //var obj=[3];
+        var obj=new Object();
+        obj.xuhao=$($input[0]).val();
+        obj.name=$($input[1]).val();
+        obj.depart=$($input[2]).val();
+        
+        var str = ' <tr bgcolor="#ffffff" class="check" title="双击取消选择"><td><label  class="lab active1" style="display: inline-block" /></label><input class="agree" style="display:none" type="checkbox"  name="a"/></td><td>' + $($input[0]).val() + '</td><td> ' + $($input[1]).val() + '</td> <td ></td><td ></td><td >共有功能权限' + $($input[2]).val() + '个</td> <td >共有路口权限' + $($input[3]).val() + '个</td><td class="editContent">编辑</td></tr>';
+        $("#tb").append(str);
+		arrs.push(obj);
+		
+    });
+    $(".editContent").on("click",function(){
+    	alert(11)
+    })
+    });
+
+	
+</script>

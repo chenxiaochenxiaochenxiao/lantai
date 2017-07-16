@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="../js/jquery-1.10.1.min.js"></script>
+		<script src="../js/vue.js"></script>
+		<style type="text/css">
+			td,
+			th {
+				text-align: center;
+				padding: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div>
+			<table id="tb" align="center" bgcolor="#d1d1d1" cellspacing="1" cellpadding="6" style="color:red">
+				<theader bgcolor="white">
+					<tr bgcolor="white">
+						<th>&nbsp;</th>
+						<th>用户编号</th>
+						<th>用户名称</th>
+						<th>所属部门</th>
+						<th>备注</th>
+						<th>功能权限</th>
+						<th>路口权限</th>
+						<th>编辑</th>
+					</tr>
+					
+				</theader>
+			</table>
+		</div>
+		<div class="dd">
+			<input type="text" />
+			<input type="text" />
+			<input type="text" />
+			<input type="text" />
+		</div>
+        <button class="btnSubmit">xsss</button>
+
+	</body>
+
+</html>
+<script>
+
+$(function() {
+
+    $.ajax({
+      url:'DepartSubmit.xml',
+      type: 'GET',
+      dataType: 'xml',
+
+      error: function(xml){
+        alert('加载XML文档出错');
+      },
+      success: function(xml){      
+        //遍历所有student节点
+        $(xml).find("student").each(function(i){
+          //获取id节点
+          var id=$(this).children("id");
+          var name=$(this).children("name");
+          //获取节点文本
+          name_value=name.text();
+          id_value=id.text();
+          //获取student下的email属性。
+            semail=$(this).attr("email");
+
+        var tr = '<tr bgcolor="white"><td><input type="checkbox" /></td><td>' + id_value + '</td><td>' + name_value + '</td><td>' + semail + '</td><td></td><td></td><td></td><td class="editContent">编辑</td></tr>';
+		var table = $("#tb").append(tr);   
+        });
+        
+   }
+
+      
+    });
+
+// $.get("data.json",function(data){
+// 	var da=data.data.users;
+//	for(var index in da) {	
+//		var p=da[index];
+//			var tr = '<tr bgcolor="white"><td><input type="checkbox" /></td><td>' + p.xuhao + '</td><td>' + p.name + '</td><td>' + p.depart + '</td><td></td><td></td><td></td><td class="editContent">编辑</td></tr>';
+//			var table = $("#tb").append(tr);         
+//	   }
+//
+//	 },"json");
+//$.ajax({
+//	type:"get",
+//	url:"data.json",
+//	async:false,
+//	success:function(data){
+//		var da=data.data.users;
+//	for(var index in da) {	
+//		var p=da[index];
+//			var tr = '<tr bgcolor="white"><td><input type="checkbox" /></td><td>' + p.xuhao + '</td><td>' + p.name + '</td><td>' + p.depart + '</td><td></td><td></td><td></td><td class="editContent">编辑</td></tr>';
+//			var table = $("#tb").append(tr);         
+//	   }
+//	}
+//});
+//		 //确认添加
+    $(".btnSubmit").on("click", function () {
+        var $input = $(".dd  input");
+        var obj=new Object();
+        obj.xuhao=$($input[0]).val();
+        obj.name=$($input[1]).val();
+        obj.depart=$($input[2]).val();       
+        var str = ' <tr bgcolor="#ffffff" class="check" title="双击取消选择"><td><label  class="lab active1" style="display: inline-block" /></label><input class="agree" style="display:none" type="checkbox"  name="a"/></td><td>' + $($input[0]).val() + '</td><td> ' + $($input[1]).val() + '</td> <td ></td><td ></td><td >' + $($input[2]).val() + '</td> <td ></td><td class="editContent">编辑</td></tr>';
+        $("#tb").append(str)			
+    });
+   $(".editContent").click(function(){
+    	alert(11)
+   });
+
+    })
+
+	
+</script>

@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>交通信号控制</title>
+		<link href="css/reset.css" type="text/css" rel="stylesheet" />
+		<link href="css/layout.css" type="text/css" rel="stylesheet" />
+		<link href="three/font-awesome-4.7.0/css/font-awesome.min.css" type="text/css" rel="stylesheet" />
+		<script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+		<script src="js/cookie.js"></script>
+		<script src="js/vue.js"></script>
+		<style type="text/css">
+			/*修改密码弹框*/
+			
+			.modify_password_input {
+				width: 300px;
+				height: 200px;
+				position: absolute;
+				z-index: 9;
+				left: 50%;
+				margin-left: -150px;
+				top: 50%;
+				margin-top: -100px;
+				border: 1px solid #ccc;
+				box-sizing: border-box;
+			}
+			
+			.modify_password_input .txt1 {
+				margin-top: 2px;
+				margin-left: 19px;
+				color: #302b8b;
+				letter-spacing: 6px;
+			}
+			
+			.modify_password_input .txt2 {
+				margin-top: 2px;
+				margin-left: 19px;
+				color: #302b8b;
+				letter-spacing: 6px;
+			}
+			
+			.modify_password_input .txt3 {
+				margin-top: 2px;
+				margin-left: 19px;
+				color: #302b8b;
+				letter-spacing: 1px;
+			}
+			
+			.modify_password_input .inpt input {
+				width: 260px;
+				height: 30px;
+				margin-left: 19px;
+			}
+			
+			.modify_password_input .btn {
+				height: 30px;
+			}
+			
+			.modify_password_input .btn span {
+				display: inline-block;
+				width: 60px;
+				height: 30px;
+				text-align: center;
+				line-height: 30px;
+				margin-top: 6px;
+				background: gray;
+				color: darkgreen;
+			}
+			
+			.modify_password_input .btn span:nth-child(1) {
+				margin-left: 85px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="model"></div>
+		
+		<div class="top">
+			<!--退出系统弹框-->
+		<div class="contentM">
+			<div class="message1">
+				信息
+			</div>
+			<div class="message2">
+				<div>您确定要退出本系统吗?</div>
+				<div>
+					<button class="message-confirm">确定</button>
+					<button class="message-quxiao">取消</button>
+				</div>
+			</div>
+		</div>
+		<!--修改密码弹框-->
+		<div class="modify_password_input">
+			<form id="modify_password_form">
+				<div class="txt1">
+					用户名：
+				</div>
+				<div class="inpt inpt1">
+					<input type="text" v-model="msg" readonly="readonly" disabled="disabled"/>
+				</div>
+				<div class="txt2">
+					密&emsp;码：
+				</div>
+				<div class="inpt inpt2">
+					<input type="password" />
+				</div>
+				<div class="txt3">
+					确认密码：
+				</div>
+				<div class="inpt inpt3">
+					<input type="password" />
+				</div>
+				<div class="btn">
+					<span class="reset_btn">重置</span>
+					<span>提交</span>
+				</div>
+			</form>
+		</div>
+			<div class="top-left"><span>交通信号控制系统</span></div>
+			<div class="top-middle">
+				<ul class="logo">
+					<li>
+						<div class="header-pic pic1"></div>
+					</li>
+					<li>
+						<div class="header-pic pic2"></div>
+					</li>
+					<li>
+						<div class="header-pic pic3"></div>
+					</li>
+					<li>
+						<div class="header-pic pic4"></div>
+					</li>
+					<li>
+						<div class="header-pic pic5"></div>
+					</li>
+				</ul>
+			</div>
+			<div class="top-dash">
+				<ul class="top-right">
+					<li id="user">
+						{{msg}}
+						<ul id="block1">
+							<li id="revise">修改密码</li>
+							<li id="exit">退出系统</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="content">
+			<div>
+				<ul class="content-left">
+					<li class="first">路口列表
+						<a target=""></a>
+					</li>
+					<li>
+						<a target="">实时地图</a>
+					</li>
+					<li>
+						<a target="">人员管理</a>
+					</li>
+					<li>
+						<a target="">路口管理</a>
+					</li>
+					<li>
+						<a target="">参数配置</a>
+					</li>
+					<li>
+						<a target="">操作日志</a>
+					</li>
+					<li class="last">
+						<a target="">运行日志</a>
+					</li>
+				</ul>
+			</div>
+			<div class="content-right">
+<button onclick="readCookie()">读取</button>
+			</div>
+		</div>
+	</body>
+
+</html>
+<script>
+	$(function() {
+
+		//退出系统（需改）
+		$("#exit").click(function() {
+			$(".model").css("display", "block");
+			$(".contentM").css("display", "block");
+		});
+		$(".message-quxiao").click(function() {
+			$(".model").css("display", "none");
+			$(".contentM").css("display", "none");
+		});
+		$(".message-confirm").click(function() {
+			window.location.href = "login.html";
+		});
+
+//		new Vue({
+//			el: '.top',
+//			data: {
+//				msg: '陈啸'
+//			},
+//			methods: {
+//				inputName(){
+//					
+//				}
+//			}
+//		});
+
+
+	})
+
+</script>

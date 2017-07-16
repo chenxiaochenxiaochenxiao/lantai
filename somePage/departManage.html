@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>部门管理</title>
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<script type="text/javascript" src="../js/jquery-1.10.1.min.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/vue.js"></script>
+		<style type="text/css">
+			body,
+			html {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+			}
+			
+			td,
+			th {
+				text-align: center;
+				padding: 10px;
+			}
+			.modal-body{
+
+			}
+			.user_message .but{
+				margin-top:10px;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div class="all" id="tb">
+			<div>
+				<button data-toggle="modal" data-target="#addUser" class="btn btn-default">添加</button>
+			</div>
+			<div class="container">
+				<div class="col-sm-8 col-sm-offset-2">
+					<table class="table table-bordered table-hover">
+						<theader bgcolor="white">
+							<tr bgcolor="white">
+								<th>&nbsp;</th>
+								<th>用户编号</th>
+								<th>用户名称</th>
+								<th>所属部门</th>
+								<th>备注</th>
+								<th>功能权限</th>
+								<th>路口权限</th>
+								<th>编辑</th>
+							</tr>
+						</theader>
+						<tbody>
+							<tr v-for="(user,index) in users">
+								<td><input type="radio" name="xuaho" /></td>
+								<td>{{index+1}}</td>
+								<td>{{user.name}}</td>
+								<td>{{user.depart}}</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td><button data-toggle="modal" data-target="#del" class="btn btn-warning btn-sm" v-on:click="nowIndex=index">删除</button></td>
+							</tr>
+							<tr>
+								<td colspan="8" class="text-right">
+									<button data-toggle="modal" data-target="#del" class="btn btn-danger btn-sm" v-on:click="nowIndex=-1">删除所有</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!--弹出删除模态框-->
+			<div class="modal" id="del">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button class="close" data-dismiss="modal">
+								<span>&times;</span>
+							</button>
+							<h4 class="modal-title" v-show="nowIndex!==-1">确认删除{{users[nowIndex]?users[nowIndex].name:''}}吗？</h4>
+							<h4 class="modal-title" v-show="nowIndex===-1">确认删除所有？</h4>
+
+						</div>
+						<div class="modal-body text-center">
+							<button class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
+							<button class="btn btn-danger btn-sm" data-dismiss="modal" @click="deleteUser">确认</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--添加用户信息-->
+			<div class="modal" id="addUser">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button class="close" data-dismiss="modal">
+								<span>&times;</span>
+							</button>
+							<h4 class="modal-title">添加用户信息</h4>
+						</div>
+						<div class="modal-body text-center">
+							<div class="user_message ">
+
+								<form action=" ">
+									<label for="user_name">用户名称</label>
+									<div>
+										<input type="text" v-model="user.name" />
+									</div>
+									<label for="user_depart">所属部门</label>
+									<div>
+										<input type="text" id="user_depart" v-model="user.depart" />
+									</div>
+								</form>
+								<div class="but">
+									<input type="reset" class="btn btn-default btn-sm" />
+							        <button class="btn btn-danger btn-sm" data-dismiss="modal" @click="adduser">确认</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</body>
+
+</html>
+<script>
+	$(function() {
+		new Vue({
+			el: '#tb',
+			data: {
+				"users": [{
+					"name": "小明 ",
+					"depart": "研发部 "
+				}, {
+					"name": "小红 ",
+					"depart": "商务部 "
+				}],
+				user: {},
+				nowIndex: -1
+			},
+			methods: {
+				adduser() {
+					this.users.push(this.user);
+					this.user = {};
+				},
+				deleteUser() {
+					if(this.nowIndex === -1) {
+						this.users = [];
+					} else {
+						this.users.splice(this.nowIndex, 1)
+					}
+
+				}
+
+			}
+		});
+
+	})
+</script>

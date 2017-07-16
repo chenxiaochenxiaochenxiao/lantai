@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>路口实时状态详情显示</title>
+		<script src="js/jquery.js"></script>
+		<style>
+			table theader tr .kong {
+				width: 26px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div>
+			<table bgcolor="#d1d1d1" cellspacing="1" align="center" border="0" width="100%">
+				<theader bgcolor="#f1f1f1">
+					<tr bgcolor="#f1f1f1">
+						<th class="kong">&emsp;</th>
+						<th>路口名称</th>
+						<th>状态时间</th>
+						<th>固件版本</th>
+						<th>方案版本</th>
+						<th>控制方式</th>
+						<th>调度方式</th>
+						<th>方案名称</th>
+						<th>配时周期</th>
+						<th>配时阶段</th>
+						<th>信号机状态</th>
+						<th>线控状态</th>
+					</tr>
+				</theader>
+
+			</table>
+		</div>
+		<asp:TextBox ID="txtLoad" runat="server" Style="display: none" value='<?xml version="1.0" encoding="utf-8" ?><document><AreaList desc="区域列表"><AreaInfo desc="单个区域信息1"><AreaId desc="区域编号" FieldLength="值范围:1-255">1</AreaId><AreaName desc="区域名称" FieldLength="最大15个汉字">浦口区</AreaName><AreaMemo desc="区域备注" FieldLength="最大200个汉字">浦口区备注</AreaMemo></AreaInfo><AreaInfo desc="单个区域信息2"><AreaId desc="区域编号">2</AreaId><AreaName desc="区域名称">六合区</AreaName><AreaMemo desc="区域备注">六合区备注</AreaMemo></AreaInfo></AreaList><RoadList desc="路口列表"><RoadInfo desc="单个路口信息1"><AreaId desc="区域编号">1</AreaId><RoadId desc="路口编号" FieldLength="值范围:1-255">1</RoadId><RoadName desc="路口名称" FieldLength="最大15个汉字">文德路1</RoadName><RoadMemo desc="路口备注" FieldLength="最大200个汉字">文德路1备注</RoadMemo><DepartList desc="部门列表" FieldLength="DepartId1;DepartId2;...DepartN;">1</DepartList><UserList desc="用户列表" FieldLength="UserId1;UserId2;...UserIdN;">1;2</UserList></RoadInfo><RoadInfo desc="单个路口信息2"><AreaId desc="区域编号">1</AreaId><RoadId desc="路口编号">2</RoadId><RoadName desc="路口名称">文德路2</RoadName><RoadMemo desc="路口备注">文德路2备注</RoadMemo><DepartList desc="部门列表">1;2</DepartList><UserList desc="用户列表">1;2;3;4</UserList></RoadInfo><RoadInfo desc="单个路口信息1"><AreaId desc="区域编号">2</AreaId><RoadId desc="路口编号" FieldLength="值范围:1-255">1</RoadId><RoadName desc="路口名称" FieldLength="最大15个汉字">六合路口1</RoadName><RoadMemo desc="路口备注" FieldLength="最大200个汉字">六合路口1备注</RoadMemo><DepartList desc="部门列表" FieldLength="DepartId1;DepartId2;...DepartN;">2</DepartList><UserList desc="用户列表" FieldLength="UserId1;UserId2;...UserIdN;">1;2;3</UserList></RoadInfo><RoadInfo desc="单个路口信息2"><AreaId desc="区域编号">2</AreaId><RoadId desc="路口编号">2</RoadId><RoadName desc="路口名称">六合路口2</RoadName><RoadMemo desc="路口备注">六合路口2备注</RoadMemo><DepartList desc="部门列表">1;2</DepartList><UserList desc="用户列表">2;3;4</UserList></RoadInfo></RoadList><DepartList desc="部门列表"><DepartInfo desc="单个部门信息1"><DepartId desc="部门编号">1</DepartId><DepartName desc="部门名称">研发部</DepartName><DepartSeq desc="部门排序编号">1</DepartSeq></DepartInfo><DepartInfo desc="单个部门信息2"><DepartId desc="部门编号">2</DepartId><DepartName desc="部门名称">商务部</DepartName><DepartSeq desc="部门排序编号">2</DepartSeq></DepartInfo></DepartList><UserList desc="账户列表"><UserInfo desc="单个账户信息1"><UserId desc="账户编号">1</UserId><UserName desc="账户名称">杨建伟</UserName><DepartId desc="账户所属部门编号">1</DepartId></UserInfo><UserInfo desc="单个账户信息2"><UserId desc="账户编号">2</UserId><UserName desc="账户名称">陈潇</UserName><DepartId desc="账户所属部门编号">1</DepartId></UserInfo><UserInfo desc="单个账户信息1"><UserId desc="账户编号">3</UserId><UserName desc="账户名称">刘建</UserName><DepartId desc="账户所属部门编号">2</DepartId></UserInfo><UserInfo desc="单个账户信息2"><UserId desc="账户编号">4</UserId><UserName desc="账户名称">曹建</UserName><DepartId desc="账户所属部门编号">2</DepartId></UserInfo></UserList></document>'></asp:TextBox>
+		<asp:TextBox ID="txtSubmit" runat="server" Style="display: none" value=''></asp:TextBox>
+	</body>
+
+</html>
+<script>
+	//	window.onload=function(){
+	//		document.querySelector("");
+	//		
+	//	}
+	$(function() {
+		var AreaArr = []; //存储区域列表信息数组
+		function xmlData(obj1) {
+			//这里的AreaInfo单个区域信息就是后台给的数据
+			$(obj1).find("AreaInfo").each(function() {
+				var obj = new Object();
+				obj.AreaId = $(this).find("AreaId").text();
+				obj.AreaName = $(this).find("AreaName").text();
+				obj.AreaMemo = $(this).find("AreaMemo").text();
+				//给主页面表格动态添加区域行和列；类名为areaTr
+				var str = '<tr class="areaTr"><td class="tdWidth55"><input type="checkbox" name="b" /></td><td class="tdWidth100">' + obj.AreaId + '</td>';
+				str += '<td class="tdWidth300">' + obj.AreaName + '</td><td class="tdWidth100"><i class="fa fa-chevron-down fa-lg"></i></td><td class="tdWidth300"></td><td class="tdAuto">' + obj.AreaMemo + '</td><td class="tdWidth100"><a>编辑</a></td></tr>';
+				$("#tbRoad").append($(str));
+				AreaArr.push(obj);
+			})
+		};
+		//初始化区域下拉框
+		function AreaArrToSelect(selectObj) {
+			for(var i = 0; i < AreaArr.length; i++) {
+				var str = '<option value="' + AreaArr[i].AreaId + '">' + AreaArr[i].AreaName + '</option>';
+				$(str).appendTo(selectObj);
+			}
+		}
+	})
+</script>
